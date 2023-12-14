@@ -1,0 +1,150 @@
+<!--
+ * @Author: wy
+ * @Date: 2023-12-14 14:13:53
+ * @LastEditors: wy
+ * @LastEditTime: 2023-12-14 15:04:45
+ * @FilePath: /笔记/webgl-three/02_geometry /index.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../js/three.js"></script>
+    <script>
+      const scene = new THREE.Scene();
+      // 透视摄像机
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      // 渲染器
+      const renderer = new THREE.WebGLRenderer();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const geometry = new THREE.BufferGeometry();
+      const vertices = new Float32Array([
+        // 底面四个顶点
+        -50.0, -50.0, -50.0, -50.0, -50.0, 50.0, 50.0, -50.0, 50.0, 50.0, -50.0,
+        -50.0,
+
+        // 顶面四个顶点
+        -50.0, 50.0, -50.0, -50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0,
+        -50.0,
+      ]);
+
+      // 定义立方体的六个面
+      const indices = new Uint16Array([
+        0,
+        1,
+        2, // 底面三角形1
+        0,
+        2,
+        3, // 底面三角形2
+
+        4,
+        5,
+        6, // 顶面三角形1
+        4,
+        6,
+        7, // 顶面三角形2
+
+        0,
+        1,
+        4, // 侧面1三角形1
+        1,
+        4,
+        5, // 侧面1三角形2
+
+        1,
+        2,
+        5, // 侧面2三角形1
+        2,
+        5,
+        6, // 侧面2三角形2
+
+        2,
+        3,
+        6, // 侧面3三角形1
+        3,
+        6,
+        7, // 侧面3三角形2
+
+        3,
+        0,
+        7, // 侧面4三角形1
+        0,
+        7,
+        4, // 侧面4三角形2
+      ]);
+
+      const colors = new Float32Array([
+        1.0,
+        0.0,
+        0.0, // 底面顶点0的颜色（红色）
+        1.0,
+        0.0,
+        0.0, // 底面顶点1的颜色（红色）
+        1.0,
+        0.0,
+        0.0, // 底面顶点2的颜色（红色）
+        1.0,
+        0.0,
+        0.0, // 底面顶点3的颜色（红色）
+
+        0.0,
+        1.0,
+        0.0, // 顶面顶点4的颜色（绿色）
+        0.0,
+        1.0,
+        0.0, // 顶面顶点5的颜色（绿色）
+        0.0,
+        1.0,
+        0.0, // 顶面顶点6的颜色（绿色）
+        0.0,
+        1.0,
+        0.0, // 顶面顶点7的颜色（绿色）
+      ]);
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      geometry.setIndex(new THREE.BufferAttribute(indices, 1));
+
+      const material = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        side: THREE.DoubleSide,
+      });
+      const cube = new THREE.Mesh(geometry, material);
+
+      scene.add(cube);
+
+      camera.position.z = 500;
+
+      document.body.appendChild(renderer.domElement);
+
+      function animation() {
+        cube.rotation.z += 0.01;
+        cube.rotation.y += 0.01;
+
+        requestAnimationFrame(animation);
+        renderer.render(scene, camera);
+      }
+
+      animation();
+    </script>
+  </body>
+</html>
