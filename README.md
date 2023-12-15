@@ -11,7 +11,7 @@
 
 ### three 要素
 
-#### 场景(screen)
+#### 场景(scene)
 
 #### 相机(camera)
 

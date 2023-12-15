@@ -1,0 +1,73 @@
+<!--
+ * @Author: wy
+ * @Date: 2023-12-14 14:13:53
+ * @LastEditors: wy
+ * @LastEditTime: 2023-12-15 10:29:39
+ * @FilePath: /笔记/webgl-three/03_geometry_plain/index.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../js/three.js"></script>
+    <script>
+      const scene = new THREE.Scene();
+      // 透视摄像机
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        1,
+        1000
+      );
+      // 渲染器
+      const renderer = new THREE.WebGLRenderer();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.localClippingEnabled = true;
+
+      const clippingPlanes = [
+        new THREE.Plane(new THREE.Vector3(1, 0, 0), 0),
+        new THREE.Plane(new THREE.Vector3(0, -1, 0), 0),
+        new THREE.Plane(new THREE.Vector3(0, 0, -1), 0),
+      ];
+      // 绘制球体
+      function createSphere() {
+        const group = new THREE.Group();
+        for (let i = 1; i < 12; i++) {
+          const geometry = new THREE.SphereGeometry(6 * i, 32, 16);
+          const material = new THREE.MeshBasicMaterial({
+            color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+            side: THREE.DoubleSide,
+            // 对球体进行切割操作
+            clippingPlanes: clippingPlanes,
+            clipIntersection: true,
+          });
+
+          const mesh = new THREE.Mesh(geometry, material);
+
+          group.add(mesh);
+        }
+        scene.add(group);
+      }
+
+      createSphere();
+
+      camera.position.set(-60, 40, 400);
+
+      document.body.appendChild(renderer.domElement);
+
+      renderer.render(scene, camera);
+    </script>
+  </body>
+</html>
